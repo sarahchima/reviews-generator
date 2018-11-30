@@ -24,9 +24,11 @@ function downloadCSV(csv) {
 document.getElementById('form').addEventListener("submit", function(e) {
     e.preventDefault();
     var url = document.getElementById('url').value;
+    var errorElement = document.getElementById('error-message');
+    errorElement.innerHTML = "";
 
     if (!url) {
-        console.log("invalid url");
+        errorElement.innerHTML = "Please enter a valid Url";
         return;
     }
     $.ajax({
@@ -43,11 +45,11 @@ document.getElementById('form').addEventListener("submit", function(e) {
                 downloadCSV(csvFile);
                 document.getElementById('url').value = "";
             } else if (response.status == "400") {
-                alert('lo')
+                errorElement.innerHTML = response.message;
             }
         },
         error: function(jqXHR, exception) {
-            // console.log(jqXHR)
+            errorElement.innerHTML = "Please enter a valid Url";
         }
 
     })
