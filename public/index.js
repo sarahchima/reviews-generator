@@ -30,6 +30,7 @@ document.getElementById('form').addEventListener("submit", function(e) {
         errorElement.innerHTML = "Please enter a valid Url";
         return;
     }
+
     $.ajax({
         url: '/get_reviews',
         method: 'post',
@@ -39,8 +40,7 @@ document.getElementById('form').addEventListener("submit", function(e) {
         success: function(response) {
             response = JSON.parse(response);
             if(response.status == "200") {
-                console.log(response);
-                const csvFile = convertReviewsToCSV(response.reviews);
+                 const csvFile = convertReviewsToCSV(response.reviews);
                 downloadCSV(csvFile);
                 document.getElementById('url').value = "";
             } else if (response.status == "400") {

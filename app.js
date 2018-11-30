@@ -1,23 +1,22 @@
 const express = require('express')
-var cors = require('cors');
+let cors = require('cors');
 const axios = require('axios');
 require('dotenv').load();
 
 const app = express()
 const port = process.env.PORT || 3000;
 
-var bodyParser = require('body-parser');
+let bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded());
 
 app.get('/', function (req, res) {
-    res.sendFile( __dirname + "/" + "index.html" );
+    res.sendFile( __dirname + "/" + "views/index.html" );
  })
 
 app.use(express.static(__dirname + "/" + 'public'));
 
 app.post('/get_reviews', cors(), function (req, res) {
     //get input from form
-    // const inputUrl = req.body.url;
     const inputUrl = JSON.stringify(req.body.url);
     const googleApiKey = process.env.GOOGLE_API_KEY;
 
@@ -27,7 +26,6 @@ app.post('/get_reviews', cors(), function (req, res) {
     }
 
     //check if it is valid google review
-
     if (inputUrl.includes("google.com") == false || inputUrl.includes("maps") == false || inputUrl.includes("place") == false ) {
         res.end(JSON.stringify({status: "400", message: "Please enter a valid google map url"}));
         res.destroy();
@@ -35,7 +33,7 @@ app.post('/get_reviews', cors(), function (req, res) {
 
     //extracts keywords for search from the url
     const urlParameters = inputUrl.split("/");
-    var location = urlParameters[6].split(",");
+    let location = urlParameters[6].split(",");
 
     const longitude = location[0].slice(1);
     const latitude = location[1];
