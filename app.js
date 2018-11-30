@@ -1,7 +1,7 @@
 const express = require('express')
 var cors = require('cors');
 const axios = require('axios');
-
+require('dotenv').load();
 
 const app = express()
 const port = process.env.PORT || 3000;
@@ -15,13 +15,12 @@ app.get('/', function (req, res) {
 
 app.use(express.static(__dirname + "/" + 'public'));
 
-
 app.post('/get_reviews', cors(), function (req, res) {
     //get input from form
     // const inputUrl = req.body.url;
     const inputUrl = JSON.stringify(req.body.url);
     const googleApiKey = process.env.GOOGLE_API_KEY;
-    
+
     //checks if input is empty
     if (inputUrl == "") {
         res.end(JSON.stringify({status: "400", message: "Invalid url"}));

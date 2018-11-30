@@ -1,5 +1,5 @@
 
-function convertToCSV(array) {
+function convertReviewsToCSV(array) {
     let csv = "UserName, Date, Star Rating, Review or Comment, Link \n";
     for (var i = 0; i < array.length; i++) {
         let text = array[i]['text'].split(',').join(';');
@@ -8,7 +8,6 @@ function convertToCSV(array) {
 
         csv += line + '\n';
     }
-
     return csv;
 }
 
@@ -41,7 +40,7 @@ document.getElementById('form').addEventListener("submit", function(e) {
             response = JSON.parse(response);
             if(response.status == "200") {
                 console.log(response);
-                const csvFile = convertToCSV(response.reviews);
+                const csvFile = convertReviewsToCSV(response.reviews);
                 downloadCSV(csvFile);
                 document.getElementById('url').value = "";
             } else if (response.status == "400") {
