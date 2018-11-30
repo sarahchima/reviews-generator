@@ -1,0 +1,48 @@
+body, html{
+    font-size: 10px;
+    box-sizing: border-box;
+}
+
+h3 {
+    font-size: 20px;
+    text-align: center;
+}
+.review-form {
+    background-color: #f2f2f2;
+    width: 500px;
+    min-height: 100px;
+    margin: 100px auto;
+    box-shadow: 1px 1px 1px 1px #f2f2f2;
+    padding: 2rem 4rem;
+}
+
+input, button{
+    height: 40px;
+    width: 100%;
+    font-size: 18px;
+    margin-bottom: 1rem;
+}
+
+button {
+    -webkit-appearance: none;
+    background-color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #f2f2f2;
+    transition: background-color 2s linear;
+}
+
+input[type="submit"] {
+    height: 40px;
+}
+
+label {
+    font-size: 18px;
+}
+
+.error-message {
+    color: red;
+    font-size: 16px;
+}
