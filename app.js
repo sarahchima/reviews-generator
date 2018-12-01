@@ -1,21 +1,24 @@
+require('dotenv').load();
+
 const express = require('express')
 let cors = require('cors');
 const axios = require('axios');
-require('dotenv').load();
-
 const app = express()
 const port = process.env.PORT || 3000;
-
 let bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded());
 
-app.get('/', function (req, res) {
-    res.sendFile( __dirname + "/" + "views/index.html" );
- })
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json())
 
 app.use(express.static(__dirname + "/" + 'public'));
 
-app.post('/get_reviews', cors(), function (req, res) {
+app.get('/', function (req, res) {
+    res.sendFile( __dirname + "/" + "views/index.html" );
+})
+
+app.post('/get_reviews', cors(), (req, res) => {
     //get input from form
     const inputUrl = JSON.stringify(req.body.url);
     const googleApiKey = process.env.GOOGLE_API_KEY;
@@ -51,7 +54,13 @@ app.post('/get_reviews', cors(), function (req, res) {
         })
         .then(resp => {
             let reviews = resp.data.result.reviews;
-            res.end(JSON.stringify({status: "200", reviews: reviews}));
+            let response = reviews.length == 0 ? "There are no reviews for this place" : reviews;
+            let data = {
+                status: "200",
+                reviews: response
+            }
+            
+            res.end(JSON.stringify(data));
         });
     
 })
