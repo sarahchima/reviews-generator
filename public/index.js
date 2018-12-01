@@ -20,36 +20,47 @@ function downloadCSV(csv) {
     hiddenElement.click();
 }
 
-document.getElementById('form').addEventListener("submit", function(e) {
+document.getElementById('form').addEventListener("submit", (e) => {
     e.preventDefault();
-    var url = document.getElementById('url').value;
-    var errorElement = document.getElementById('error-message');
+    const url = document.getElementById('url-input');
+    const errorElement = document.getElementById('error-message');
+    const submitButton = document.getElementById("submit-button");
+    
     errorElement.innerHTML = "";
+    submitButton.innerHTML = "";
+    submitButton.classList.add("spinner");
 
-    if (!url) {
+    if (url.value == "" || url.value == null) {
         errorElement.innerHTML = "Please enter a valid Url";
         return;
     }
 
-    $.ajax({
-        url: '/get_reviews',
-        method: 'post',
-        data: {
-           url: document.getElementById('url').value
-        },
-        success: function(response) {
-            response = JSON.parse(response);
-            if(response.status == "200") {
-                 const csvFile = convertReviewsToCSV(response.reviews);
-                downloadCSV(csvFile);
-                document.getElementById('url').value = "";
-            } else if (response.status == "400") {
-                errorElement.innerHTML = response.message;
-            }
-        },
-        error: function(jqXHR, exception) {
-            errorElement.innerHTML = "Please enter a valid Url";
-        }
+    let data = {url : url.value};
 
+    fetch('/get_reviews', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers:{
+            'Content-Type': 'application/json'
+        }
     })
+    .then(response => {
+        response.json()
+        .then(data => {
+            if(data.status == "200") {
+                const csvFile = convertReviewsToCSV(data.reviews);
+                downloadCSV(csvFile);
+                url.value = "";
+            } else if (data.status == "400") {
+                errorElement.innerHTML = data.message;
+            }
+            submitButton.innerHTML = "Submit";
+            submitButton.classList.remove("spinner");
+        })
+    })
+    .catch(error => {
+        console.log(error)
+        errorElement.innerHTML = "Sorry, we can't get reviews for this place at the moment";
+    })
+
 })
