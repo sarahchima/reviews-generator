@@ -4,7 +4,8 @@ function convertReviewsToCSV(array) {
     for (var i = 0; i < array.length; i++) {
         let text = array[i]['text'].split(',').join(';');
         text = text.replace(/(\r\n\t|\n|\r\t)/gm,"");
-        var line = `${array[i]['author_name']}, ${array[i]['relative_time_description']}, ${array[i]['rating']}, ${text}, " ${array[i]['author_url']} "`;
+
+        var line = `${array[i]['author_name']}, ${array[i]['relative_time_description']}, ${array[i]['rating']}, ${text}, ${array[i]['author_url']} `;
 
         csv += line + '\n';
     }
@@ -20,6 +21,18 @@ function downloadCSV(csv) {
     hiddenElement.click();
 }
 
+function enableButton(button, text) {
+    button.innerHTML = text;
+    button.classList.remove("spinner");
+    button.disabled = false;
+}
+
+function disableButton(button) {
+    button.innerHTML = "";
+    button.classList.add("spinner");
+    button.disabled = true;
+
+}
 document.getElementById('form').addEventListener("submit", (e) => {
     e.preventDefault();
     const url = document.getElementById('url-input');
@@ -27,8 +40,7 @@ document.getElementById('form').addEventListener("submit", (e) => {
     const submitButton = document.getElementById("submit-button");
     
     errorElement.innerHTML = "";
-    submitButton.innerHTML = "";
-    submitButton.classList.add("spinner");
+    disableButton(submitButton);
 
     if (url.value == "" || url.value == null) {
         errorElement.innerHTML = "Please enter a valid Url";
@@ -54,13 +66,13 @@ document.getElementById('form').addEventListener("submit", (e) => {
             } else if (data.status == "400") {
                 errorElement.innerHTML = data.message;
             }
-            submitButton.innerHTML = "Submit";
-            submitButton.classList.remove("spinner");
+            
+            enableButton(submitButton, "Submit");
         })
     })
     .catch(error => {
-        console.log(error)
         errorElement.innerHTML = "Sorry, we can't get reviews for this place at the moment";
+        enableButton(submitButton, "Submit");
     })
 
 })
