@@ -9,7 +9,7 @@ h3 {
 }
 .review-form {
     background-color: #f2f2f2;
-    width: 500px;
+    max-width: 500px;
     min-height: 100px;
     margin: 100px auto;
     box-shadow: 1px 1px 1px 1px #f2f2f2;
@@ -27,6 +27,10 @@ button {
     -webkit-appearance: none;
     background-color: white;
     cursor: pointer;
+}
+
+button:disabled {
+    cursor: default;
 }
 
 button:hover {
