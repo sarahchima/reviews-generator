@@ -14,11 +14,23 @@ function convertReviewsToCSV(array) {
 
 
 function downloadCSV(csv) {
-    var hiddenElement = document.createElement('a');
-    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
-    hiddenElement.target = '_blank';
-    hiddenElement.download = 'reviews.csv';
-    hiddenElement.click();
+    let filename = 'reviews.csv';
+    let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    
+    if (navigator.msSaveBlob) { 
+        navigator.msSaveBlob(blob, filename);
+    } else {
+        let link = document.createElement("a");
+        if (link.download !== undefined) { 
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
 }
 
 function enableButton(button, text) {
